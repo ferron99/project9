@@ -81,6 +81,12 @@ void calc( int a[], int many ) {
 //// Handlers.
 void keyPressed() {
   if (key == 'r') reset();
+  if (key == 'a') {
+    sortInt( a, many );
+  }
+  if (key == 'b') {
+    sortInt( b, many );
+  }
   if (key == 's') {
     sortInt( a, many );
     sortInt( b, many );
