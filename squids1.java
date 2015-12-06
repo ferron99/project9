@@ -27,8 +27,8 @@ void reset() {
 //// NEXT FRAME:  scene, action
 void draw() {
   scene();
-  action();
   show();
+  action();
   text( "squid1.java", 100, 20 );
   if (score>0) text( "SCORE:  "+score, width*3/4, 20 );
 }
