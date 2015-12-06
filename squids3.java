@@ -30,8 +30,8 @@ void reset() {
 //// NEXT FRAME:  scene, action
 void draw() {
   scene();
-  action();
   show();
+  action();
   fill(0);
   text( "Three little Squids", width/3, 20 );
   text( "BAM:  squids3.java", 10, height-10 );
