@@ -36,12 +36,12 @@ void reset() {
 //// NEXT FRAME:  scene, action
 void draw() {
   scene();
+  show();
   if (key >= 'A' && key <= 'Z') {
     boatReport( 50, bounty, 1 );
     fishReport( surface+50, school, school.length);
   }
   else action();
-  show();
   messages();
 }
 void messages() {
