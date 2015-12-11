@@ -1,4 +1,4 @@
-//// Exercise with arrays of objects -- take 2.
+//// Exercise with arrays of objects + report.
 //// Prof bam (CST 112)
 
 float surface;
