@@ -4,10 +4,9 @@
 float surface;
 Tuna charlie;
 
-
 Tuna[] group;
 int many=5;
-boolean action=false;
+boolean action=true;
 
 //// SETUP:  screen size.
 void setup() {
@@ -19,6 +18,7 @@ void setup() {
   charlie.g=  255;
   charlie.b=  200;
   charlie.fins=  1;
+  charlie.name=  "Charlie";
   //
   charlie.y=  height-50;
   charlie.dy=0;
@@ -29,6 +29,9 @@ void setup() {
 
 }
 void reset() {    
+  
+  charlie.x=0;
+  action=  ! action;
   
   float spacing=  width / (many+1);
   float tunaX= spacing;
@@ -62,18 +65,18 @@ void draw() {
   
   // msgs
   text( "Arrays of objects.  \n(Charlie collects fins.)", width/3, 20 );
-  text( "('a' key for action;\n  'r' for reset; 'q' to quit)", width/2, 80 );
+  text( "('T' key for report;\n  'r' for reset; 'q' to quit)", width/2, 80 );
 
 }  
 void keyPressed() {
   if (key == 'q') exit();
   if (key == 'r') reset();
-  if (key == 'a') action = !action;
 }
 
 
 // Display Show and move all members of group.
 void action() {  
+  
   if (! action) return;
   
   // show all
@@ -148,6 +151,7 @@ class Tuna {
   float r=255, g=255, b=200;
   int fins=1;
   int num;
+  String name="";
   
   // CONSTRUCTOR
   Tuna( int n, float x ) {
@@ -175,6 +179,7 @@ class Tuna {
     }
     fill(0);
     text( num, x+w/4,y );
+    text( name, x-w/3,y+10 );
     if (fins>1) text( fins, x-w/4,y );
   }
   void move() {
