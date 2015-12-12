@@ -1,3 +1,9 @@
+//BAM:  Please start with a comment that includes your name and the purpose of this code.
+//BAM:  No legs on octupi; no animation (except smoke).;
+//BOM:  No collisions.
+
+
+
 
 class Boat {
   float posX, posY;
@@ -66,7 +72,8 @@ class Squid{
     posX = (i+1) * spacing;
     posY = height;
     movY = random(-4,-2);      
-    
+
+//BAM:  Why use the int() methos?  (These statements do nothing!)    
     int(legs);
     int(r);
     int(g);
