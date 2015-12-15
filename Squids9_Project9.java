@@ -6,12 +6,12 @@ Squid school[]=  new Squid[many];
 String names[]=  { "Otto", "Nono", "Deca", "Ariel", "Ursala", "Squidy", "Charles", "Nanner", "Doc" };
 float spacing;
 
-Boat bounty=  new Boat();
-Boat fleet[]= new Boat[4];
+Boat fleet[]= new Boat[5];
 
 float surface;
 float moonX=0, moonY=100;
 int score=0;
+boolean pause = false;
 
 //// SETUP:  size & reset.
 void setup() {
@@ -30,7 +30,6 @@ void reset() {
     school[i]=  new Squid( names[i], x );
     x += spacing;
   }
-  bounty.name=  "Bounty";
   for (int i=0; i<fleet.length; i++){
     fleet[i]= new Boat();
     fleet[i].dx = random( 3, 5 );
@@ -39,6 +38,7 @@ void reset() {
   fleet[1].name = "Ship";
   fleet[2].name = "Raft";
   fleet[3].name = "Barge";
+  fleet[4].name = "Bounty";
 }
 
 
@@ -46,19 +46,20 @@ void reset() {
 void draw() {
   scene();
   show();
-  if (key >= 'A' && key <= 'Z') {
-    boatReport( 50, bounty, fleet.length+1 );
+  if (pause == true) {
+    boatReport( 50, fleet.length+1 );
     fishReport( surface+50, school, school.length);
-  }
-  else action();
+  }else{ action(); }
+  
   messages();
 }
+
+
 void messages() {
   fill(0);
   textSize(12);
   text( "Nick Ferro: Project 9", 10, height-10 );
-  if (score>0) text( "SCORE:  "+score, width*3/4, 20 );
-  
+  if (score>0) text( "SCORE:  "+score, width*3/4, 20 );  
 }
 
 //// METHODS TO MOVE & DRAW.
@@ -82,7 +83,6 @@ void action() {
   for (int i=0; i<many; i++ ) {
     school[i].move();
   }
-  bounty.move();
   for (int i=0; i<fleet.length; i++){
     fleet[i].move();
   }
@@ -95,7 +95,6 @@ void show() {
     x += spacing;
     school[i].show();
   }
-  bounty.show();
   for (int i=0; i<fleet.length; i++){
     fleet[i].show();
   }
@@ -103,7 +102,7 @@ void show() {
 
 //// SUMMARIES:  List all objects in the array.
 // Display the properties of each object in the array.
-void boatReport( float top, Boat b, int many ) {
+void boatReport( float top, int many ) {
   fill(255,200,200);
   rect( 50,top, width-100, 50 + 20*many );
   float x=70, y=top+20;
@@ -115,15 +114,9 @@ void boatReport( float top, Boat b, int many ) {
   text( "dx", x+205, y );
   fill(0);
   //
-  y += 15;
-  text( 1, x, y );
-  text( b.name, x+20, y );
-  text( b.cargo, x+70, y );
-  text( b.x, x+100, y );
-  text( b.dx, x+200, y );
   for (int i=0; i<fleet.length; i++) {
     y += 15;    // Next line.
-    text( i+2, x, y );
+    text( i+1, x, y );
     text( fleet[i].name, x+20, y );
     text( fleet[i].cargo, x+70, y );
     text( fleet[i].x, x+100, y );
@@ -145,7 +138,7 @@ void fishReport( float top, Squid[] a, int many ) {
   fill(0);
   for (int i=0; i<many; i++) {
     y += 15;    // Next line.
-    text( i, x, y );
+    text( i+1, x, y );
     text( a[i].name, x+20, y );
     text( a[i].legs, x+70, y );
     text( a[i].x, x+100, y );
@@ -184,6 +177,8 @@ void keyPressed() {
       school[k].dy=  -0.1  ;
     }
   }
+  if (key == 'k') pause = true;
+  if (key == 'l') pause = false;
 }
 
 
@@ -260,6 +255,16 @@ class Squid {
   }
 }
 
+class SData{
+  float x,y,dy;
+  int legs;
+  String name; 
+  
+  SData(){
+    
+  }
+}
+
 
 class Boat {
   String name="";
@@ -310,5 +315,14 @@ class Boat {
     ellipse( x +20 -20*dx, surface-60, 15, 10 );
     ellipse( x +20 -30*dx, surface-70, 8, 5 );
   }    
+}
+
+class BData { 
+  float x, dx;
+  String name; 
+  int cargo, id;
+  
+  BData(){
+  }
 }
 
