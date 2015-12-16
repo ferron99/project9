@@ -5,9 +5,9 @@ int many=9;
 Squid school[]=  new Squid[many];
 String names[]=  { "Otto", "Nono", "Deca", "Ariel", "Ursala", "Squidy", "Charles", "Nanner", "Doc" };
 float spacing;
-
+SData sdatas[]= new SData[many];
 Boat fleet[]= new Boat[5];
-
+BData bdatas[]= new BData[fleet.length];
 float surface;
 float moonX=0, moonY=100;
 int score=0;
@@ -30,6 +30,13 @@ void reset() {
     school[i]=  new Squid( names[i], x );
     x += spacing;
   }
+  //Squid Data
+  for (int i=0; i<many; i++) {
+    sdatas[i] = new SData();
+    sdatas[i].id = i;
+  }
+  
+  //Boats
   for (int i=0; i<fleet.length; i++){
     fleet[i]= new Boat();
     fleet[i].dx = random( 3, 5 );
@@ -39,6 +46,12 @@ void reset() {
   fleet[2].name = "Raft";
   fleet[3].name = "Barge";
   fleet[4].name = "Bounty";
+  //Boat Data
+  for (int i=0; i<fleet.length; i++) {
+    bdatas[i] = new BData();
+    bdatas[i].id = i;
+  }
+  
 }
 
 
@@ -48,9 +61,9 @@ void draw() {
   show();
   if (pause == true) {
     boatReport( 50, fleet.length+1 );
-    fishReport( surface+50, school, school.length);
+    fishReport( surface+50, sdatas, school.length);
   }else{ action(); }
-  
+  dataTrack();
   messages();
 }
 
@@ -59,6 +72,7 @@ void messages() {
   fill(0);
   textSize(12);
   text( "Nick Ferro: Project 9", 10, height-10 );
+  text( "Press 'c' to pause, press 'v' to unpause", width/2, height-10);
   if (score>0) text( "SCORE:  "+score, width*3/4, 20 );  
 }
 
@@ -87,6 +101,24 @@ void action() {
     fleet[i].move();
   }
 }
+
+void dataTrack(){
+  for (int i=0; i<many; i++){
+    sdatas[i].x = school[sdatas[i].id].x;
+    sdatas[i].y = school[sdatas[i].id].y;
+    sdatas[i].dy = school[sdatas[i].id].dy;
+    sdatas[i].legs = school[sdatas[i].id].legs;
+    sdatas[i].name = school[sdatas[i].id].name;
+  }
+  //track data for boats
+  for (int i=0; i<fleet.length; i++){
+    bdatas[i].x = fleet[bdatas[i].id].x;
+    bdatas[i].dx = fleet[bdatas[i].id].dx;
+    bdatas[i].cargo = fleet[bdatas[i].id].cargo;
+    bdatas[i].name = fleet[bdatas[i].id].name;
+  }
+}
+
 //// Display the squids in (sorted) order.
 void show() {
   float x=  spacing;
@@ -117,14 +149,58 @@ void boatReport( float top, int many ) {
   for (int i=0; i<fleet.length; i++) {
     y += 15;    // Next line.
     text( i+1, x, y );
-    text( fleet[i].name, x+20, y );
-    text( fleet[i].cargo, x+70, y );
-    text( fleet[i].x, x+100, y );
-    text( fleet[i].dx, x+200, y );
+    text( bdatas[i].name, x+20, y );
+    text( bdatas[i].cargo, x+70, y );
+    text( bdatas[i].x, x+100, y );
+    text( bdatas[i].dx, x+200, y );
+  }
+  text("Hold 'b' to sort by position (x)", width/2, top+20);
+  text("Hold 'd' to sort by speed (dx)", width/2, top+35);
+  text("Hold 'f' to sort by greatest cargo", width/2, top+50);
+}
+
+//sort bdata list into ascending x pos
+void bxsrt(){
+  for( int j=0; j<fleet.length; j++) {
+  for (int i=0; i<fleet.length-1; i++){
+    if(bdatas[i].x > bdatas[i+1].x){
+      bswap(i, i+1);
+    }
+   }
   }
 }
 
-void fishReport( float top, Squid[] a, int many ) {
+void bdxsrt(){
+  for( int j=0; j<fleet.length; j++) {
+  for (int i=0; i<fleet.length-1; i++){
+    if(bdatas[i].dx > bdatas[i+1].dx){
+      bswap(i, i+1);
+    }
+   }
+  }
+}
+
+void bcargosrt(){
+  for( int j=0; j<fleet.length; j++) {
+  for (int i=0; i<fleet.length-1; i++){
+    if(bdatas[i].cargo < bdatas[i+1].cargo){
+      bswap(i, i+1);
+    }
+   }
+  }
+}
+
+
+
+//swaps boat data ids
+void bswap( int j, int k ) {
+  int tmpid;
+  tmpid=  bdatas[k].id;
+  bdatas[k].id=  bdatas[j].id;
+  bdatas[j].id=  tmpid;
+}
+
+void fishReport( float top, SData[] a, int many ) {
   fill(255,255,200);
   rect( 50,top, width-100, 50 + 20*many );
   float x=70, y=top+20;
@@ -145,8 +221,59 @@ void fishReport( float top, Squid[] a, int many ) {
     text( a[i].y, x+200, y );
     text( a[i].dy, x+300, y );
   }
+  text("Hold 'x' to sort by position (x)", width/2, top+20);
+  text("Hold 'y' to sort by height (y)", width/2, top+35);
+  text("Hold 's' to sort by speed(dy)", width/2, top+50);
+  text("Hold 's' to sort by number of legs", width/2, top+65);
 }
+
+void sxsrt(){
+  for( int j=0; j<many; j++) {
+  for (int i=0; i<many-1; i++){
+    if(sdatas[i].x > sdatas[i+1].x){
+      sswap(i, i+1);
+    }
+   }
+  }
+} 
+
+void sysrt(){
+  for( int j=0; j<many; j++) {
+  for (int i=0; i<many-1; i++){
+    if(sdatas[i].y > sdatas[i+1].y){
+      sswap(i, i+1);
+    }
+   }
+  }
+} 
+
+void sdysrt(){
+  for( int j=0; j<many; j++) {
+  for (int i=0; i<many-1; i++){
+    if(sdatas[i].dy > sdatas[i+1].dy){
+      sswap(i, i+1);
+    }
+   }
+  }
+}    
+
+void slegssrt(){
+  for( int j=0; j<many; j++) {
+  for (int i=0; i<many-1; i++){
+    if(sdatas[i].legs > sdatas[i+1].legs){
+      sswap(i, i+1);
+    }
+   }
+  }
+}    
     
+//swaps squid data ids
+void sswap( int j, int k ) {
+  int tmpid;
+  tmpid=  sdatas[k].id;
+  sdatas[k].id=  sdatas[j].id;
+  sdatas[j].id=  tmpid;
+}    
 
 //// EVENT HANDLERS:  keys, clicks ////
 void keyPressed() {
@@ -164,21 +291,45 @@ void keyPressed() {
     }
     school[k].bottom();     
   }
+  if(key == 'b'){
+    //for(int i=0; i<10; i++){
+    bxsrt();
+    //}
+  }
+  if(key == 'd'){
+    bdxsrt();
+  }
+  if(key == 'f'){
+    bcargosrt();
+  }
+  if(key == 'x'){
+    sxsrt();
+  }
+  if(key == 'y'){
+    sysrt();
+  }
+  if(key == 's'){
+    sdysrt();
+  }
+  if(key == 'l'){
+    slegssrt();
+  }
+  
   // Cheat codes:
   //// Send all to top or bottom.
-  if (key == 'b') {
-    for (int k=0; k<many; k++ ) {
-      school[k].bottom();     
-    }
-  }
+  //if (key == 'b') {
+  //  for (int k=0; k<many; k++ ) {
+  //    school[k].bottom();     
+  //  }
+  //}
   if (key == 't') {
     for (int k=0; k<many; k++ ) {
       school[k].y=  surface+10;
       school[k].dy=  -0.1  ;
     }
   }
-  if (key == 'k') pause = true;
-  if (key == 'l') pause = false;
+  if (key == 'c') pause = true;
+  if (key == 'v') pause = false;
 }
 
 
@@ -257,7 +408,7 @@ class Squid {
 
 class SData{
   float x,y,dy;
-  int legs;
+  int id, legs;
   String name; 
   
   SData(){
